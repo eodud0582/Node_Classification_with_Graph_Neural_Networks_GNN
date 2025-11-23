@@ -48,7 +48,7 @@ To handle class imbalance and small data size:
 - Hyperparameter Tuning: Used Optuna for automated optimization and manual Grid Search.
 
 ## Final Implementation
-After extensive testing, the APPNP (Approximate Personalized Propagation of Neural Predictions) model achieved the best performance, closely followed by MultiviewGNN with pseudo-labeling.
+After extensive testing, the APPNP (Approximate Personalized Propagation of Neural Predictions) model achieved the best performance, with MultiviewGNN with pseudo-labeling coming in very close.
 
 ### Architecture Details
 - Input: Z-score scaled features.
