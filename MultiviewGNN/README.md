@@ -61,6 +61,12 @@ The dataset is heavily imbalanced. We address this carefully to avoid data leaka
 ### C. Stratified K-Fold Cross-Validation
 * We use **5-Fold Stratified CV**. This ensures that every fold maintains the same percentage of samples for each class as the complete set, providing a reliable performance metric.
 
+### D. Reproducibility & Determinism
+
+GNNs are often sensitive to weight initialization and GPU non-determinism. To guarantee that our results are reproducible:
+* Full Seed Fixing: We explicitly set random seeds (777) for Python, NumPy, PyTorch, and CUDA.
+* Deterministic Algorithms: We forced CuDNN to use deterministic algorithms (torch.use_deterministic_algorithms(True)), ensuring that the model converges to the exact same result across different runs on the same hardware.
+
 ---
 
 ## 3. Advanced Semi-Supervised Learning
@@ -80,6 +86,22 @@ We look at the model's confidence (probability) for each prediction.
 * **Fresh Initialization:** We re-initialize the model weights rather than fine-tuning to avoid getting stuck in local minima from the previous stage.
 * **Pure Validation Set:** Crucially, the validation set used during this phase contains only original ground-truth labels. We intentionally exclude pseudo-labels from validation to ensure we are optimizing for real accuracy, not just fitting our own guesses.
 * **Final Ensemble:** To reduce variance, the final submission is a **Majority Vote** between the Cross-Validation predictions and the Pseudo-Labeled model's predictions.
+
+---
+
+## 4. Model Configuration
+
+The following hyperparameters were selected based on extensive tuning:
+
+| Hyperparameter        | Value | Note |
+|-----------------------|-------|------|
+| Hidden Dimension      | 256   | High capacity to capture complex patterns |
+| Dropout               | 0.3   | Lower than default (0.5) to preserve structural info |
+| Learning Rate         | 0.001 | With ReduceLROnPlateau Scheduler |
+| Weight Decay          | 5e-4  | L2 Regularization to prevent( overfitting |
+| Heads (GATv2)         | 4     | Multi-head attention for richer feature learning |
+| Degree Clip           | 99    | Clamped max degree for embedding stability |
+| Pseudo-Label Threshold| 0.98  | Only very high-confidence samples are used |
 
 ---
 
