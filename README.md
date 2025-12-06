@@ -53,7 +53,7 @@ After extensive testing, the APPNP (Approximate Personalized Propagation of Neur
 ### Architecture Details
 - Input: Z-score scaled features.
 - Layers: Two Linear layers with ReLU activation and Dropout.
-- Propagation: APPNP layer (K=72 hops, alpha approx 0.05).
+- Propagation: APPNP layer (Hyperparameter tuned, with K=72 hops, alpha approx 0.05, etc.).
 - Optimizer: Adam with ReduceLROnPlateau scheduler.
 
 ### Performance Results
@@ -68,11 +68,13 @@ MultiviewGNN Model
 - Test Accuracy (Hidden Set): 84.83%
 - My model
 
+```
 ### Optimal Hyperparameters
 
 | Hidden Dimension | Dropout Rate | Learning Rate | Weight Decay | Propagation Hops (K) | Teleport Prob (Alpha) |
 | --- | --- | --- | --- | --- | --- |
 | 64 | 0.507 | 7.75e-3 | 9.79e-7 | 72 | 0.049 |
+```
 
 ## My Contributions
 - Developed MultiviewGNN, implemented Pseudo-labeling and ensemble methods.
