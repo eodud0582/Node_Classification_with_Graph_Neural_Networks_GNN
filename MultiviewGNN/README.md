@@ -32,6 +32,12 @@ The input is fed simultaneously into three distinct branches. The outputs are co
     * **Layer:** `SAGEConv`.
     * **Role:** Aggregates neighborhood information efficiently. GraphSAGE is excellent at generalizing to nodes that have slightly different local structures.
 
+**Why this combination? (The Synergy)**
+
+While GAT focuses on specific important neighbors, GraphSAGE generalizes well over neighborhood averages, and ResGCN preserves global structural signals through deeper layers.
+
+By concatenating these views, the model becomes robust: if the attention mechanism fails on a noisy edge, the ResGCN branch still provides a reliable baseline signal. This prevents the "over-smoothing" problem often seen in single-architecture GNNs.
+
 ### C. Feature Fusion
 * The outputs of all three branches are **concatenated** (stacked together).
 * A final Multi-Layer Perceptron (MLP) processes this combined vector to classify the node.
@@ -47,9 +53,10 @@ Building a strong architecture is only half the battle. The training pipeline in
 * **DropEdge:** We randomly remove 10% of edges during training (`p=0.1`). This prevents the model from over-relying on specific connections.
 
 ### B. Handling Class Imbalance
-The dataset is heavily imbalanced. To fix this:
-* **Class Weights:** The Loss Function (`NLLLoss`) is weighted. Errors on rare classes are penalized more heavily.
-* **Oversampling:** Inside each training fold, we randomly duplicate samples from minority classes so that the model sees an equal distribution of labels.
+The dataset is heavily imbalanced. We address this carefully to avoid data leakage:
+* **Class Weights:** The Loss Function (`NLLLoss`) is weighted (assigned class weights inversely proportional to class frequencies). Errors on rare classes are penalized more heavily.
+* **Oversampling:** Inside each **training fold** (training fold only), we randomly duplicate samples from minority classes so that the model sees an equal distribution of labels.
+   - We do **not** oversample the dataset before splitting. This ensures that synthetic copies of validation nodes never leak into the training set, guaranteeing that our Cross-Validation score remains honest and realistic.
 
 ### C. Stratified K-Fold Cross-Validation
 * We use **5-Fold Stratified CV**. This ensures that every fold maintains the same percentage of samples for each class as the complete set, providing a reliable performance metric.
@@ -58,7 +65,7 @@ The dataset is heavily imbalanced. To fix this:
 
 ## 3. Advanced Semi-Supervised Learning
 
-Since only about 20% of the data is labeled, we implemented a **Pseudo-Labeling (Self-Training)** loop to utilize the unlabeled test data.
+Since only about 20% of the data is labeled, We implemented a **Pseudo-Labeling (Self-Training)** loop to utilize the unlabeled test data.
 
 ### Step 1: Teacher Training
 We train the `MultiviewGNN` on the known training data and predict labels for the test set.
@@ -66,10 +73,12 @@ We train the `MultiviewGNN` on the known training data and predict labels for th
 ### Step 2: High-Confidence Selection
 We look at the model's confidence (probability) for each prediction.
 * **Threshold:** `0.98` (98% confidence).
-* If the model is 98% sure about a test node, we assume that label is correct and add it to the training set.
+* If the model is 98% sure about a test node, We assume that label is correct and add it to the training set.
 
 ### Step 3: Student Retraining & Ensemble
 * We retrain the model from scratch using the **expanded dataset** (Original Train + Pseudo-Labeled Test).
+* **Fresh Initialization:** We re-initialize the model weights rather than fine-tuning to avoid getting stuck in local minima from the previous stage.
+* **Pure Validation Set:** Crucially, the validation set used during this phase contains only original ground-truth labels. We intentionally exclude pseudo-labels from validation to ensure we are optimizing for real accuracy, not just fitting our own guesses.
 * **Final Ensemble:** To reduce variance, the final submission is a **Majority Vote** between the Cross-Validation predictions and the Pseudo-Labeled model's predictions.
 
 ---
