@@ -84,8 +84,8 @@ Developed to overcome the limitations of single-view models by aggregating diver
 
 | Model | Cross-Validation Accuracy | Test Accuracy (Hidden) | Note |
 | --- | --- | --- | --- |
-| **APPNP** | 90.32% | **85.23%** | **Team's Best (1st Place)** |
-| **MultiviewGNN** | **90.48%** | 84.83% | My Contribution (Robust CV Score) |
+| **APPNP** | 90.32% | **85.23%** | **Team's best (1st Place)** |
+| **MultiviewGNN** | **90.48%** | 84.83% | My model (robust CV score) |
 
 ## My Contributions
 
