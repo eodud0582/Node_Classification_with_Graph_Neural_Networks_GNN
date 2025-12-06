@@ -37,7 +37,7 @@ We compared several GNN architectures using PyTorch:
 - GCN / GCNII: Baseline models using graph convolution.
 - GraphSAGE: Efficient sampling of neighbors for faster training.
 - GAT / GATv2: Uses attention mechanisms to prioritize important neighbors.
-- MultiviewGNN: An ensemble approach combining GAT, GCN, and GraphSAGE.
+- MultiviewGNN: An ensemble approach combining GAT, GCN, and GraphSAGE, using psuedo-labeling.
 - APPNP (Final Choice): Uses PageRank to propagate information, balancing local and global features effectively.
 
 ### 3. Training Enhancements
@@ -57,8 +57,16 @@ After extensive testing, the APPNP (Approximate Personalized Propagation of Neur
 - Optimizer: Adam with ReduceLROnPlateau scheduler.
 
 ### Performance Results
+
+APPNP Model
 - Cross-Validation Accuracy (Internal): 90.32%
 - Test Accuracy (Hidden Set): 85.23%
+- Our best model
+
+MultiviewGNN Model
+- Cross-Validation Accuracy (Internal): 90.48%
+- Test Accuracy (Hidden Set): 84.83%
+- My model
 
 ### Optimal Hyperparameters
 
