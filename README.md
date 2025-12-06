@@ -1,4 +1,4 @@
-# Node Classification with Graph Neural Networks (GNN)
+# Semi-Supervised Graph Node Classification using Graph Neural Networks (GNN)
 
 ## Competition Results
 
