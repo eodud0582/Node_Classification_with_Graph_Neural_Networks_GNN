@@ -68,13 +68,13 @@ MultiviewGNN Model
 - Test Accuracy (Hidden Set): 84.83%
 - My model
 
-```
+<!--
 ### Optimal Hyperparameters
 
 | Hidden Dimension | Dropout Rate | Learning Rate | Weight Decay | Propagation Hops (K) | Teleport Prob (Alpha) |
 | --- | --- | --- | --- | --- | --- |
 | 64 | 0.507 | 7.75e-3 | 9.79e-7 | 72 | 0.049 |
-```
+-->
 
 ## My Contributions
 - Developed MultiviewGNN, implemented Pseudo-labeling and ensemble methods.
