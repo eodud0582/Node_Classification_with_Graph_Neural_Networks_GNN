@@ -9,7 +9,7 @@ Instead of relying on a single type of GNN (like GCN or GAT), this model adopts 
 
 The core philosophy is that no single GNN layer is perfect for all nodes. Some nodes require attention mechanisms (GAT), while others benefit from neighborhood aggregation (SAGE) or deep structural propagation (ResGCN).
 
-[Image of neural network architecture diagram]
+<p align="center"> <img width="50%"  height="1151" alt="image" src="https://github.com/user-attachments/assets/d9bc349c-cba9-4dee-833b-30dd883ed22c" />
 
 ### A. Input Processing & Structural Encoding
 Before entering the main layers, the data undergoes specific preprocessing:
