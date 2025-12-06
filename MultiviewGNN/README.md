@@ -44,7 +44,30 @@ By concatenating these views, the model becomes robust: if the attention mechani
 
 ---
 
-## 2. Training Strategy & Pipeline
+## 2. Key Technical Decisions
+
+Beyond standard layers, specific architectural choices were made to address common GNN limitations:
+
+### A. Mitigating Oversmoothing (Residual Connections)
+
+In deep GNNs, node features tend to become indistinguishable after multiple aggregation steps (the "oversmoothing" problem).
+* Solution: We implemented Residual Connections (Skip-Connections) in the ResGCN branch.
+* Effect: By adding the input features directly to the output ($x_{out} = F(x) + x$), the model preserves unique node identities even as it captures global structural information.
+
+### B. Stabilizing Training (Graph Normalization)
+
+Standard Batch Normalization assumes independent and identically distributed (i.i.d) samples, which is not always true for graph nodes.
+* Solution: We used GraphNorm instead of BatchNorm.
+* Effect: GraphNorm normalizes features across the nodes within a specific graph/subgraph. This is empirically shown to converge faster and generalize better for node classification tasks compared to standard normalization techniques.
+
+### C. Dynamic Attention (GATv2 over GAT)
+
+* Why GATv2? Standard GAT computes static attention (the ranking of neighbors depends only on the global weight matrix, not the query node).
+* Effect: We utilized GATv2, which introduces dynamic attention where the importance of a neighbor is conditioned on both the source and target nodes. This makes the attention mechanism strictly more expressive and capable of handling complex edge cases.
+
+---
+
+## 3. Training Strategy & Pipeline
 
 Building a strong architecture is only half the battle. The training pipeline includes several advanced techniques to handle data scarcity and class imbalance.
 
@@ -69,7 +92,7 @@ GNNs are often sensitive to weight initialization and GPU non-determinism. To gu
 
 ---
 
-## 3. Advanced Semi-Supervised Learning
+## 4. Advanced Semi-Supervised Learning
 
 Since only about 20% of the data is labeled, We implemented a **Pseudo-Labeling (Self-Training)** loop to utilize the unlabeled test data.
 
@@ -89,7 +112,7 @@ We look at the model's confidence (probability) for each prediction.
 
 ---
 
-## 4. Model Configuration
+## 5. Model Configuration
 
 The following hyperparameters were selected based on extensive tuning:
 
